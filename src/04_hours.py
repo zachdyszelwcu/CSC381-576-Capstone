@@ -31,3 +31,38 @@ plt.tight_layout()
 plt.savefig("figures/hours_shap.png", dpi=300)
 plt.show()
 
+
+hours_band = [0, 5, 10, 25, 50, 100, 200, 500, np.inf]
+
+labels = [
+    "0-5",
+    "5-10",
+    "10-25",
+    "25-50",
+    "50-100",
+    "100-200",
+    "200-500",
+    "500+"
+]
+
+num_rev = df["hours_played"].count()
+
+print(df["hours_played"].count())
+
+
+bad_reviews = (df["not_recommended"] == 1).sum()
+
+percent_of_bad_reviews = bad_reviews / num_rev * 100
+
+print(percent_of_bad_reviews)
+
+df["hours_band"] = pd.cut(
+    df["hours_played"],
+    bins=hours_band,
+    right=False
+)
+
+df.groupby("hours_band", observed=True)["not_recommended"].sum()
+
+
+print(df.head(50))
