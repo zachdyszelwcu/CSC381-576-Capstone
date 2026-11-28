@@ -65,4 +65,33 @@ df["hours_band"] = pd.cut(
 df.groupby("hours_band", observed=True)["not_recommended"].sum()
 
 
-print(df.head(50))
+bad_reviews_by_band = df.groupby(
+    "hours_band", observed=True
+)["not_recommended"].sum()
+
+total_reviews_by_band = df.groupby(
+    "hours_band", observed=True
+)["not_recommended"].count()
+
+
+good_reviews_by_band = total_reviews_by_band - bad_reviews_by_band
+
+
+print(bad_reviews_by_band)
+
+print(total_reviews_by_band) 
+
+print(good_reviews_by_band)
+
+percent_by_band = bad_reviews_by_band / total_reviews_by_band * 100
+
+
+band_stats = pd.DataFrame({
+    "total_reviews": total_reviews_by_band,
+    "bad_reviews": bad_reviews_by_band,
+    "good_reviews": good_reviews_by_band,
+    "percent_bad_reviews": percent_by_band
+})
+
+band_stats.to_csv("results/hours_table.csv")
+
